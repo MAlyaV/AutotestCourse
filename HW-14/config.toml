@@ -1,0 +1,15 @@
+[GENERAL]
+BROWSER = 'chrome'
+SITE = 'https://fix-online.sbis.ru/'
+#SITES = [ "https://fix-online.sbis.ru/auth/", ]
+ELEMENT_OUTPUT_LOG = "user_friendly"
+DO_NOT_RESTART = true
+DELAY_ACTION = 0.5
+SOFT_RESTART = false
+WAIT_ELEMENT_LOAD = 20
+#JENKINS_CONTROL_ADDRESS = "jenkins-control.tensor.ru"
+
+[CUSTOM]
+SITE_TASK = 'https://fix-online.sbis.ru/page/work-schedule-documents'
+USER_LOGIN = "fford"
+USER_PASSWORD = "ASD123"
