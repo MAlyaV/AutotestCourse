@@ -1,16 +1,16 @@
 import datetime
-from atf import *
 from atf.ui import *
+import inspect
 
-from pages.AuthPage import AuthPage
-from pages.Documents import Documents
+from CourseAutotests.HOMEWORK14.pages.AuthPage import AuthPage
+from CourseAutotests.HOMEWORK14.pages.Documents import Documents
 
 
 class TestTimeOff(TestCaseUI):
-
     tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
     timeoff_data = {'Сотрудник': 'Чернов Лев', 'Описание': 'Для АТ\n*Сотрудник усталь...)', 'Дата': tomorrow,
-                    'Время': ['1200', '1400']}
+                    'Время отгула': ['12:00', '14:00']}
+    timeoff_time = False
 
     @classmethod
     def setUpClass(cls):
@@ -19,6 +19,20 @@ class TestTimeOff(TestCaseUI):
 
     def setUp(self):
         Documents(self.driver).open_page()
+
+    def timeoff_actions(self):
+        # Проверяем, откуда вызван метод
+        if inspect.currentframe().f_back.f_code.co_name == 'test_02':
+            self.timeoff_time = True
+        task_page = Documents(self.driver)
+        timeoff_card = task_page.create_timeoff()
+        timeoff_card.fill_card(self.timeoff_time, **self.timeoff_data)
+        timeoff_card.save_timeoff()
+        self.browser.refresh()
+        task_page.check_timeoff(**self.timeoff_data)
+        task_page.open_timeoff(**self.timeoff_data)
+        timeoff_card.check_data(**self.timeoff_data)
+        timeoff_card.delete_timeoff()
 
     def test_01(self):
         """
@@ -31,16 +45,7 @@ class TestTimeOff(TestCaseUI):
         Удалить отгул
         """
 
-        task_page = Documents(self.driver)
-        timeoff_card = task_page.create_timeoff()
-        timeoff_card.fill_card(**timeoff_data)
-        timeoff_card.run_timeoff()
-        timeoff_card.close()
-        self.browser.refresh()
-        task_page.check_timeoff(**timeoff_data)
-        task_page.open_timeoff(**timeoff_data)
-        timeoff_card.check_data(**timeoff_data)
-        timeoff_card.delete_timeoff()
+        self.timeoff_actions()
 
     def test_02(self):
         """
@@ -53,7 +58,4 @@ class TestTimeOff(TestCaseUI):
         Удалить отгул
         """
 
-        task_page = Documents(self.driver)
-        timeoff_card = task_page.create_timeoff()
-
-
+        self.timeoff_actions()
