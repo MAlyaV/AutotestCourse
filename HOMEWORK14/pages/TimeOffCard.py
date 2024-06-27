@@ -1,6 +1,5 @@
 from atf.ui import *
 from controls import *
-
 from CourseAutotests.HOMEWORK14.pages.StaffSelector import StaffSelector
 
 
